@@ -5,7 +5,7 @@ const WINDOW_WIDTH: i32 = 1200;
 const WINDOW_HEIGHT: i32 = 800;
 const TERRAIN_SIZE: i32 = 128;
 const CUBE_SIZE: f32 = 2.0;
-const INITIAL_WATER_LEVEL: f32 = 1.0;
+const INITIAL_WATER_LEVEL: f32 = 0.1;
 
 fn generatePermutation(allocator: std.mem.Allocator, seed: u64) ![]i32 {
     var prng = std.Random.DefaultPrng.init(seed);
