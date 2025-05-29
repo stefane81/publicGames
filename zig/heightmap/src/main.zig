@@ -1,9 +1,9 @@
 const std = @import("std");
 const rl = @import("raylib");
-const terrain = @import("terrain.zig");
-const water = @import("water.zig");
-const camera = @import("camera.zig");
-const ui = @import("ui.zig");
+const Terrain = @import("terrain.zig");
+const Water = @import("water.zig");
+const Camera = @import("camera.zig");
+const UI = @import("ui.zig");
 
 const WINDOW_WIDTH: i32 = 1200;
 const WINDOW_HEIGHT: i32 = 800;
@@ -22,43 +22,43 @@ pub fn main() anyerror!void {
     //--------------------------------------------------------------------------------------
 
     // Initialize camera
-    camera.initCamera();
+    Camera.initCamera();
 
     // Generate terrain
     // Use a seed based on the current time for randomness
-    var _terrain = try terrain.generateTerrain(allocator, @intFromFloat(rl.getTime() * 1000000.0));
+    var _terrain = try Terrain.generateTerrain(allocator, @intFromFloat(rl.getTime() * 1000000.0));
     defer allocator.free(_terrain);
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
-        camera.updateCamera();
+        Camera.updateCamera();
 
         // Regenerate terrain
         if (rl.isKeyPressed(rl.KeyboardKey.r) or rl.isMouseButtonPressed(rl.MouseButton.right)) {
             allocator.free(_terrain);
-            _terrain = try terrain.generateTerrain(allocator, @intFromFloat(rl.getTime() * 1000000.0));
+            _terrain = try Terrain.generateTerrain(allocator, @intFromFloat(rl.getTime() * 1000000.0));
         }
 
         // Adjust water level
-        water.adjustWaterLevel();
+        Water.adjustWaterLevel();
 
         rl.beginDrawing();
         defer rl.endDrawing();
 
         rl.clearBackground(.white);
-        rl.beginMode3D(camera.camera);
+        rl.beginMode3D(Camera.camera);
 
         // Draw terrain
-        terrain.drawTerrain(_terrain);
+        Terrain.drawTerrain(_terrain);
         // Draw
         //----------------------------------------------------------------------------------
         // Draw water
-        water.drawWater();
+        Water.drawWater();
 
         rl.endMode3D();
 
         // Draw UI
-        ui.drawUI();
+        UI.drawUI();
         //----------------------------------------------------------------------------------
     }
 }
