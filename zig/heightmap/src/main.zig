@@ -28,8 +28,6 @@ pub fn main() anyerror!void {
     // Use a seed based on the current time for randomness
     var _terrain = try terrain.generateTerrain(allocator, @intFromFloat(rl.getTime() * 1000000.0));
     defer allocator.free(_terrain);
-    // var water_level: f32 = INITIAL_WATER_LEVEL;
-    // var water_level: f32 = water.water_level;
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
@@ -49,7 +47,6 @@ pub fn main() anyerror!void {
 
         rl.clearBackground(.white);
         rl.beginMode3D(camera.camera);
-        // Update
 
         // Draw terrain
         terrain.drawTerrain(_terrain);
@@ -58,7 +55,6 @@ pub fn main() anyerror!void {
         // Draw water
         water.drawWater();
 
-        // rl.drawGrid(10, 10.0);
         rl.endMode3D();
 
         // Draw UI
