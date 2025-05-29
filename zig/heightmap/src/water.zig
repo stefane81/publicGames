@@ -6,7 +6,6 @@ const INITIAL_WATER_LEVEL: f32 = 0.1;
 var water_level: f32 = INITIAL_WATER_LEVEL;
 
 pub fn drawWater() void {
-
     // Draw water
     const water_size = @as(f32, @floatFromInt(Terrain.TERRAIN_SIZE)) * Terrain.CUBE_SIZE;
     const water_pos = rl.Vector3{ .x = 0, .y = water_level, .z = 0 };

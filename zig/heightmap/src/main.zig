@@ -2,7 +2,7 @@ const std = @import("std");
 const rl = @import("raylib");
 const Terrain = @import("terrain.zig");
 const Water = @import("water.zig");
-const Camera = @import("camera.zig");
+const CameraType = @import("camera.zig").Camera;
 const UI = @import("ui.zig");
 
 const WINDOW_WIDTH: i32 = 1200;
@@ -12,6 +12,7 @@ pub fn main() anyerror!void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
     defer _ = gpa.deinit();
+    var camera = CameraType.init();
 
     // Initialization
     //--------------------------------------------------------------------------------------
@@ -21,9 +22,6 @@ pub fn main() anyerror!void {
     rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
-    // Initialize camera
-    Camera.initCamera();
-
     // Generate terrain
     // Use a seed based on the current time for randomness
     var _terrain = try Terrain.generateTerrain(allocator, @intFromFloat(rl.getTime() * 1000000.0));
@@ -31,7 +29,7 @@ pub fn main() anyerror!void {
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
-        Camera.updateCamera();
+        camera.updateCamera();
 
         // Regenerate terrain
         if (rl.isKeyPressed(rl.KeyboardKey.r) or rl.isMouseButtonPressed(rl.MouseButton.right)) {
@@ -46,7 +44,7 @@ pub fn main() anyerror!void {
         defer rl.endDrawing();
 
         rl.clearBackground(.white);
-        rl.beginMode3D(Camera.camera);
+        rl.beginMode3D(camera.camera);
 
         // Draw terrain
         Terrain.drawTerrain(_terrain);
@@ -58,7 +56,7 @@ pub fn main() anyerror!void {
         rl.endMode3D();
 
         // Draw UI
-        UI.drawUI();
+        UI.drawUI(&camera);
         //----------------------------------------------------------------------------------
     }
 }
