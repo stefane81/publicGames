@@ -1,11 +1,10 @@
 const std = @import("std");
 const rl = @import("raylib");
 const terrain = @import("terrain.zig");
+const water = @import("water.zig");
 
 const WINDOW_WIDTH: i32 = 1200;
 const WINDOW_HEIGHT: i32 = 800;
-
-const INITIAL_WATER_LEVEL: f32 = 0.1;
 
 pub fn main() anyerror!void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
@@ -35,6 +34,7 @@ pub fn main() anyerror!void {
     var _terrain = try terrain.generateTerrain(allocator, @intFromFloat(rl.getTime() * 1000000.0));
     defer allocator.free(_terrain);
     // var water_level: f32 = INITIAL_WATER_LEVEL;
+    // var water_level: f32 = water.water_level;
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
@@ -75,8 +75,7 @@ pub fn main() anyerror!void {
         }
 
         // Adjust water level
-        // if (rl.isKeyDown(rl.KeyboardKey.comma)) water_level = @max(0.0, water_level - 0.1);
-        // if (rl.isKeyDown(rl.KeyboardKey.period)) water_level += 0.1;
+        water.adjustWaterLevel();
 
         rl.beginDrawing();
         defer rl.endDrawing();
@@ -85,16 +84,12 @@ pub fn main() anyerror!void {
         rl.beginMode3D(camera);
         // Update
 
-        // allocator.free(terrain);
-        // terrain = try generateTerrain(allocator, @intFromFloat(rl.getTime() * 1000000.0));
         // Draw terrain
         terrain.drawTerrain(_terrain);
         // Draw
         //----------------------------------------------------------------------------------
         // Draw water
-        // const water_size = @as(f32, @floatFromInt(TERRAIN_SIZE)) * CUBE_SIZE;
-        // const water_pos = rl.Vector3{ .x = 0, .y = water_level, .z = 0 };
-        // rl.drawCube(water_pos, water_size, 0.1, water_size, rl.colorAlpha(rl.Color.sky_blue, 0.5));
+        water.drawWater();
 
         rl.drawGrid(10, 10.0);
         rl.endMode3D();

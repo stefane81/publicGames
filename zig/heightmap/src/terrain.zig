@@ -1,7 +1,7 @@
 const std = @import("std");
 const rl = @import("raylib");
-const TERRAIN_SIZE: i32 = 128;
-const CUBE_SIZE: f32 = 2.0;
+pub const TERRAIN_SIZE: i32 = 128;
+pub const CUBE_SIZE: f32 = 2.0;
 
 pub fn drawTerrain(terrain: []const f32) void {
     for (0..TERRAIN_SIZE) |z| {
