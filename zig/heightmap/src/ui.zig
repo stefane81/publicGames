@@ -1,7 +1,7 @@
 const rl = @import("raylib");
-const CameraType = @import("camera.zig").Camera;
+const CAMERA = @import("camera.zig").Camera;
 
-pub fn drawUI(camera: *const CameraType) void {
+pub fn drawUI(camera: *const CAMERA) void {
     // Draw UI
     rl.drawRectangle(10, 10, 245, 162, rl.fade(rl.Color.sky_blue, 0.5));
     rl.drawRectangleLines(10, 10, 245, 162, rl.Color.blue);
