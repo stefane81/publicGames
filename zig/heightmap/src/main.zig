@@ -1,8 +1,8 @@
 const std = @import("std");
 const rl = @import("raylib");
 const Terrain = @import("terrain.zig");
-const Water = @import("water.zig");
-const CameraType = @import("camera.zig").Camera;
+const WATER = @import("water.zig").Water;
+const CAMERA = @import("camera.zig").Camera;
 const UI = @import("ui.zig");
 
 const WINDOW_WIDTH: i32 = 1200;
@@ -12,8 +12,11 @@ pub fn main() anyerror!void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
     defer _ = gpa.deinit();
-    var camera = CameraType.init();
+    var Camera = CAMERA.init();
+    var Water = WATER.init();
 
+    // defer Camera.deinit(); // Deinitialize camera
+    // defer Water.deinit();
     // Initialization
     //--------------------------------------------------------------------------------------
     rl.initWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raylib-zig [core] example - basic window");
@@ -29,7 +32,7 @@ pub fn main() anyerror!void {
 
     // Main game loop
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
-        camera.updateCamera();
+        Camera.updateCamera();
 
         // Regenerate terrain
         if (rl.isKeyPressed(rl.KeyboardKey.r) or rl.isMouseButtonPressed(rl.MouseButton.right)) {
@@ -44,7 +47,7 @@ pub fn main() anyerror!void {
         defer rl.endDrawing();
 
         rl.clearBackground(.white);
-        rl.beginMode3D(camera.camera);
+        rl.beginMode3D(Camera.camera);
 
         // Draw terrain
         Terrain.drawTerrain(_terrain);
@@ -56,7 +59,7 @@ pub fn main() anyerror!void {
         rl.endMode3D();
 
         // Draw UI
-        UI.drawUI(&camera);
+        UI.drawUI(&Camera);
         //----------------------------------------------------------------------------------
     }
 }
