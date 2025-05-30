@@ -20,10 +20,15 @@ pub const Terrain = struct {
             for (0..self.size) |x| {
                 const height = terrain[z * self.size + x];
                 const cube_height = height * 20.0;
+                // const pos = rl.Vector3{
+                //     .x = @as(f32, @floatFromInt(x)) * self.cube_size - @as(f32, @floatFromInt(@as(i32, @intCast(self.size)))) * self.cube_size / 2,
+                //     .y = cube_height / 2,
+                //     .z = @as(f32, @floatFromInt(z)) * self.cube_size - @as(f32, @floatFromInt(@as(i32, @intCast(self.size)))) * self.cube_size / 2,
+                // };
                 const pos = rl.Vector3{
-                    .x = @as(f32, @floatFromInt(x)) * self.cube_size - @as(f32, @floatFromInt(@as(i32, @intCast(self.size)))) * self.cube_size / 2,
+                    .x = @as(f32, @floatFromInt(x)) * self.cube_size - @as(f32, @floatFromInt(self.size)) * self.cube_size / 2,
                     .y = cube_height / 2,
-                    .z = @as(f32, @floatFromInt(z)) * self.cube_size - @as(f32, @floatFromInt(@as(i32, @intCast(self.size)))) * self.cube_size / 2,
+                    .z = @as(f32, @floatFromInt(z)) * self.cube_size - @as(f32, @floatFromInt(self.size)) * self.cube_size / 2,
                 };
                 var color = rl.colorFromHSV(120 * height, 0.8, 0.8);
                 if (cube_height < water_level * 2) {
@@ -121,7 +126,7 @@ pub const Terrain = struct {
 
         for (0..self.size) |y| {
             for (0..self.size) |x| {
-                terrain[y * self.size + x] = fbm(@floatFromInt(x), @floatFromInt(y), 6, 0.59, 2.0, 50.0, perm);
+                terrain[y * self.size + x] = fbm(@floatFromInt(x), @floatFromInt(y), 6, 0.5, 2.0, 50.0, perm);
             }
         }
 
