@@ -51,7 +51,7 @@ pub fn main() anyerror!void {
         rl.beginMode3D(Camera.camera);
 
         // Draw terrain
-        Terrain.drawTerrain(_terrain);
+        Terrain.drawTerrain(_terrain, Water.water_level);
         // Draw
         //----------------------------------------------------------------------------------
         // Draw water

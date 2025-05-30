@@ -2,7 +2,7 @@ const std = @import("std");
 const rl = @import("raylib");
 
 pub const TERRAIN_SIZE: usize = 128;
-pub const CUBE_SIZE: f32 = 2.0;
+pub const CUBE_SIZE: f32 = 1.0;
 
 pub const Terrain = struct {
     size: usize,
@@ -15,7 +15,7 @@ pub const Terrain = struct {
         };
     }
 
-    pub fn drawTerrain(self: @This(), terrain: []const f32) void {
+    pub fn drawTerrain(self: @This(), terrain: []const f32, water_level: f32) void {
         for (0..self.size) |z| {
             for (0..self.size) |x| {
                 const height = terrain[z * self.size + x];
@@ -26,10 +26,11 @@ pub const Terrain = struct {
                     .z = @as(f32, @floatFromInt(z)) * self.cube_size - @as(f32, @floatFromInt(@as(i32, @intCast(self.size)))) * self.cube_size / 2,
                 };
                 var color = rl.colorFromHSV(120 * height, 0.8, 0.8);
-
-                color.r = @intFromFloat(@as(f32, @floatFromInt(color.r)) * 0.7);
-                color.g = @intFromFloat(@as(f32, @floatFromInt(color.g)) * 0.7);
-                color.b = @intFromFloat(@as(f32, @floatFromInt(color.b)) * 0.7);
+                if (cube_height < water_level * 2) {
+                    color.r = @intFromFloat(@as(f32, @floatFromInt(color.r)) * 0.7);
+                    color.g = @intFromFloat(@as(f32, @floatFromInt(color.g)) * 0.7);
+                    color.b = @intFromFloat(@as(f32, @floatFromInt(color.b)) * 0.7);
+                }
                 rl.drawCube(pos, self.cube_size, cube_height, self.cube_size, color);
             }
         }
@@ -120,8 +121,20 @@ pub const Terrain = struct {
 
         for (0..self.size) |y| {
             for (0..self.size) |x| {
-                terrain[y * self.size + x] = fbm(@floatFromInt(x), @floatFromInt(y), 6, 0.5, 2.0, 50.0, perm);
+                terrain[y * self.size + x] = fbm(@floatFromInt(x), @floatFromInt(y), 6, 0.59, 2.0, 50.0, perm);
             }
+        }
+
+        // Normalize the terrain
+        var min: f32 = terrain[0];
+        var max: f32 = terrain[0];
+        for (terrain) |value| {
+            min = @min(min, value);
+            max = @max(max, value);
+        }
+
+        for (terrain) |*value| {
+            value.* = (value.* - min) / (max - min);
         }
 
         return terrain;
