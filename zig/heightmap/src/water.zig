@@ -1,6 +1,6 @@
 const std = @import("std");
 const rl = @import("raylib");
-const Terrain = @import("terrain.zig");
+const TERRAIN = @import("terrain.zig");
 
 pub const Water = struct {
     water_level: f32 = 0.1,
@@ -8,16 +8,15 @@ pub const Water = struct {
 
     pub fn init() @This() {
         // Initialize water with a default level
-        const water = @This(){
+        return @This(){
             .water_level = 0.1,
             .INITIAL_WATER_LEVEL = 0.5,
         };
-        return water;
     }
 
     pub fn drawWater(self: *@This()) void {
         // Draw water
-        const water_size = @as(f32, @floatFromInt(Terrain.TERRAIN_SIZE)) * Terrain.CUBE_SIZE;
+        const water_size = @as(f32, @floatFromInt(TERRAIN.TERRAIN_SIZE)) * TERRAIN.CUBE_SIZE;
         const water_pos = rl.Vector3{ .x = 0, .y = self.water_level, .z = 0 };
         rl.drawCube(water_pos, water_size, 0.1, water_size, rl.colorAlpha(rl.Color.sky_blue, 0.5));
     }

@@ -1,6 +1,6 @@
 const std = @import("std");
 const rl = @import("raylib");
-const Terrain = @import("terrain.zig");
+const TERRAIN = @import("terrain.zig").Terrain;
 const WATER = @import("water.zig").Water;
 const CAMERA = @import("camera.zig").Camera;
 const UI = @import("ui.zig");
@@ -12,6 +12,7 @@ pub fn main() anyerror!void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     const allocator = gpa.allocator();
     defer _ = gpa.deinit();
+    var Terrain = TERRAIN.init();
     var Camera = CAMERA.init();
     var Water = WATER.init();
 
